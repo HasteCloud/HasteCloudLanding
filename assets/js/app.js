@@ -31,7 +31,7 @@ presets.o = (x, y, s, dx, dy) => {
             ctx.strokeStyle = colour;
             ctx.stroke();
         }
-    }
+    };
 };
 
 presets.x = (x, y, s, dx, dy, dr, r) => {
