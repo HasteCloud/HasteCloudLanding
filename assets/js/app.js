@@ -20,18 +20,51 @@ let scalingObjectX = 0;
 let scalingObjectY = 0;
 let scalingObjectType = '';
 
+function drawAnyObject(x,y,s) {
+    let type = '';
+    if (Math.round(Math.random()) === 1) type = 'o';
+    else type = 'x';
+    drawObject(x, y, s, type);
+}
+
+function drawObject(x,y,s,type) {
+    switch(type) {
+        case 'o':
+            elements.push(presets.o(x, y, s, 0, 0));
+            break;
+        case 'x':
+        default:
+            elements.push(presets.x(x, y, s, 0, 0, ((Math.random() * 3) - 1) / 10, (Math.random() * 360)));
+            break;
+    }
+}
+
+function drawScalingObject(ctx, time) {
+    let item;
+    switch(scalingObjectType) {
+        case 'o':
+            item = presets.o(scalingObjectX, scalingObjectY, size, 0, 0);
+            break;
+        case 'x':
+        default:
+            item = presets.x(scalingObjectX, scalingObjectY, size, 0, 0, ((Math.random() * 3) - 1) / 10, (Math.random() * 360));
+            break;
+    }
+    item.draw(ctx, time);
+}
+
 document.addEventListener('mousedown', (event) => {
     drawScalingObjectB = true;
     scalingObjectX = event.pageX;
     scalingObjectY = event.pageY;
     if (scalingObjectType === '') scalingObjectType = (Math.round(Math.random()) === 1) ? 'o': 'x';
     sizeFunctionId = setInterval(function() {
-        size += 0.1
+        size += 0.1;
     }, 50);
 });
 
 document.addEventListener('mouseup', (event) => {
-    clearInterval(sizeFunctionId)
+    clearInterval(sizeFunctionId);
     drawScalingObjectB = false;
     drawObject(scalingObjectX, scalingObjectY, size, scalingObjectType);
     scalingObjectType = '';
@@ -106,39 +139,6 @@ for (let x = 0; x < Canvas.width; x++) {
             drawAnyObject(x, y, s);
         }
     }
-}
-
-function drawAnyObject(x,y,s) {
-    let type = '';
-    if (Math.round(Math.random()) === 1) type = 'o';
-    else type = 'x';
-    drawObject(x, y, s, type);
-}
-
-function drawObject(x,y,s,type) {
-    switch(type) {
-        case 'o':
-            elements.push(presets.o(x, y, s, 0, 0));
-            break;
-        case 'x':
-        default:
-            elements.push(presets.x(x, y, s, 0, 0, ((Math.random() * 3) - 1) / 10, (Math.random() * 360)));
-            break;
-    }
-}
-
-function drawScalingObject(ctx, time) {
-    let item;
-    switch(scalingObjectType) {
-        case 'o':
-            item = presets.o(scalingObjectX, scalingObjectY, size, 0, 0);
-            break;
-        case 'x':
-        default:
-            item = presets.x(scalingObjectX, scalingObjectY, size, 0, 0, ((Math.random() * 3) - 1) / 10, (Math.random() * 360));
-            break;
-    }
-    item.draw(ctx, time);
 }
 
 setInterval(() => {
