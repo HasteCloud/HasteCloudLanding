@@ -19,8 +19,8 @@ presets.o = (x, y, s, dx, dy) => {
         y,
         r: 12 * s,
         w: 5 * s,
-        dx: dx,
-        dy: dy,
+        dx,
+        dy,
         draw(ctx, t) {
             this.x += this.dx;
             this.y += this.dy;
@@ -90,6 +90,6 @@ setInterval(function() {
     ctx.clearRect(0, 0, Canvas.width, Canvas.height);
 
     const time = new Date().getTime();
-    for (const e in elements)
-		elements[e].draw(ctx, time);
+    for (const element of elements)
+		element.draw(ctx, time);
 }, 10);
