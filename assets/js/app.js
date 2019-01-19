@@ -13,6 +13,31 @@ resize();
 const elements = [];
 const presets = {};
 
+let size = 0.1;
+let sizeFunctionId;
+let drawScalingObjectB = false;
+let scalingObjectX = 0;
+let scalingObjectY = 0;
+let scalingObjectType = '';
+
+document.addEventListener('mousedown', (event) => {
+    drawScalingObjectB = true;
+    scalingObjectX = event.pageX;
+    scalingObjectY = event.pageY;
+    if (scalingObjectType === '') scalingObjectType = (Math.round(Math.random()) === 1) ? 'o': 'x';
+    sizeFunctionId = setInterval(function() {
+        size += 0.1
+    }, 50);
+});
+
+document.addEventListener('mouseup', (event) => {
+    clearInterval(sizeFunctionId)
+    drawScalingObjectB = false;
+    drawObject(scalingObjectX, scalingObjectY, size, scalingObjectType);
+    scalingObjectType = '';
+    size = 0.1;
+});
+
 presets.o = (x, y, s, dx, dy) => {
     return {
         x,
@@ -78,18 +103,49 @@ for (let x = 0; x < Canvas.width; x++) {
     for (let y = 0; y < Canvas.height; y++) {
         if (Math.round(Math.random() * 8000) === 1) {
             const s = ((Math.random() * 5) + 1) / 10;
-            if (Math.round(Math.random()) === 1)
-                elements.push(presets.o(x, y, s, 0, 0));
-            else
-                elements.push(presets.x(x, y, s, 0, 0, ((Math.random() * 3) - 1) / 10, (Math.random() * 360)));
+            drawAnyObject(x, y, s);
         }
     }
 }
 
-setInterval(function() {
+function drawAnyObject(x,y,s) {
+    let type = '';
+    if (Math.round(Math.random()) === 1) type = 'o';
+    else type = 'x';
+    drawObject(x, y, s, type);
+}
+
+function drawObject(x,y,s,type) {
+    switch(type) {
+        case 'o':
+            elements.push(presets.o(x, y, s, 0, 0));
+            break;
+        case 'x':
+        default:
+            elements.push(presets.x(x, y, s, 0, 0, ((Math.random() * 3) - 1) / 10, (Math.random() * 360)));
+            break;
+    }
+}
+
+function drawScalingObject(ctx, time) {
+    let item;
+    switch(scalingObjectType) {
+        case 'o':
+            item = presets.o(scalingObjectX, scalingObjectY, size, 0, 0);
+            break;
+        case 'x':
+        default:
+            item = presets.x(scalingObjectX, scalingObjectY, size, 0, 0, ((Math.random() * 3) - 1) / 10, (Math.random() * 360));
+            break;
+    }
+    item.draw(ctx, time);
+}
+
+setInterval(() => {
     ctx.clearRect(0, 0, Canvas.width, Canvas.height);
 
     const time = new Date().getTime();
-    for (const element of elements)
-		element.draw(ctx, time);
+
+    drawScalingObjectB && drawScalingObject(ctx, time);
+    for (const element of elements) element.draw(ctx, time);
 }, 10);
