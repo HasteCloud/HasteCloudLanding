@@ -20,13 +20,6 @@ let scalingObjectX = 0;
 let scalingObjectY = 0;
 let scalingObjectType = '';
 
-function drawAnyObject(x,y,s) {
-    let type = '';
-    if (Math.round(Math.random()) === 1) type = 'o';
-    else type = 'x';
-    drawObject(x, y, s, type);
-}
-
 function drawObject(x,y,s,type) {
     switch(type) {
         case 'o':
@@ -37,6 +30,13 @@ function drawObject(x,y,s,type) {
             elements.push(presets.x(x, y, s, 0, 0, ((Math.random() * 3) - 1) / 10, (Math.random() * 360)));
             break;
     }
+}
+
+function drawAnyObject(x,y,s) {
+    let type = '';
+    if (Math.round(Math.random()) === 1) type = 'o';
+    else type = 'x';
+    drawObject(x, y, s, type);
 }
 
 function drawScalingObject(ctx, time) {
